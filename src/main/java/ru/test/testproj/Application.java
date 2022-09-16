@@ -8,7 +8,7 @@ import ru.test.testproj.parser.ActionParser;
 
 public class Application {
 	public static void main(String[] args) {
-		DoCalculate calc = new DoCalculate(new ConsoleReader(), new CalculatorProviderImpl(new ActionParser(), new DigitParser()));
+		DoCalculate calc = new DoCalculate(new ConsoleReader(System.in), new CalculatorProviderImpl(new ActionParser(), new DigitParser()));
 		System.out.println(calc.doCalculate());
 	}
 }

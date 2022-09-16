@@ -1,13 +1,25 @@
 package ru.test.testproj.reader;
 
 import java.io.FilterInputStream;
+import java.io.InputStream;
 import java.util.Scanner;
 
-public class ConsoleReader implements Reader {
+import ru.test.testproj.error.CalcAppError;
+
+public class ConsoleReader implements Reader<String> {
+	private final InputStream input;
+	
+	public ConsoleReader(InputStream input) {
+		this.input = input;
+	}
 	
 	@Override
 	public String read() {
-		Scanner scan = new Scanner(new FilterInputStream(System.in){ public void close(){ } });
+		if(input == null) {
+			throw new CalcAppError("Input stream is null");
+		}
+		
+		Scanner scan = new Scanner(new FilterInputStream(input){ public void close(){ } });
 		String result = scan.nextLine();
 		scan.close();
 		
