@@ -5,6 +5,7 @@ import java.util.Arrays;
 import ru.test.testproj.utils.Roman2Arabic;
 
 public class DigitParser implements Parser<String[], String> {
+	public static final int ELEMENT_COUNT = 2;
 	
 	@Override
 	public String[] parse(String data) {

@@ -14,9 +14,21 @@ public class CalculatorProviderImpl implements CalculatorProvider<String, String
 	@Override
 	public String calculate(String data) {
 		String result = "";
+		
+		if(data == null) {
+			throw new IllegalArgumentException("Input data is null");
+		}
+		
+		if(digitParser == null || actionParser == null) {
+			throw new IllegalArgumentException("Actions or Digits parsers is null");
+		}
 
 		String action = actionParser.parse(data);
 		String[] digits = digitParser.parse(data);
+		
+		if(action == null || digits == null) {
+			throw new IllegalArgumentException("Actions or Digits elements is null");
+		}
 		
 		
 		if (digits.length == 2) {
@@ -33,7 +45,11 @@ public class CalculatorProviderImpl implements CalculatorProvider<String, String
 				if(isDigit) {
 					result = diff(Integer.valueOf(digits[0].split(" ")[0]), Integer.valueOf(digits[1].split(" ")[0])).toString();
 				} else {
-					result = Roman2Arabic.toRoman(diff(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1])));
+					if(Roman2Arabic.toArabic(digits[0]) < Roman2Arabic.toArabic(digits[1])) {
+						result = "-" + Roman2Arabic.toRoman(Math.abs(diff(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1]))));
+					} else {
+						result = Roman2Arabic.toRoman(diff(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1])));
+					}
 				}
 			}
 			if (action.equals("/")) {
