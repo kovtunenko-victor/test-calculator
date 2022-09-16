@@ -1,5 +1,6 @@
 package ru.test.testproj.parser;
 
+import ru.test.testproj.error.CalcAppError;
 import ru.test.testproj.reader.Reader;
 
 public class DoCalculate {
@@ -11,6 +12,10 @@ public class DoCalculate {
 		this.calcProvider = calcProvider;
 	}
 	public String doCalculate() {
-		return calcProvider.calculate(reader.read());
+		try {
+			return calcProvider.calculate(reader.read());
+		} catch (CalcAppError ex) {
+			return ex.getMessage();
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package ru.test.testproj.parser;
 
-import ru.test.testproj.utils.Roman2Arabic;
+import ru.test.testproj.error.CalcAppError;
+import ru.test.testproj.utils.DigitUtils;
 
 public class CalculatorProviderImpl implements CalculatorProvider<String, String> {
 	private final Parser<String, String> actionParser;
@@ -16,18 +17,18 @@ public class CalculatorProviderImpl implements CalculatorProvider<String, String
 		String result = "";
 		
 		if(data == null) {
-			throw new IllegalArgumentException("Input data is null");
+			throw new CalcAppError("Input data is null");
 		}
 		
 		if(digitParser == null || actionParser == null) {
-			throw new IllegalArgumentException("Actions or Digits parsers is null");
+			throw new CalcAppError("Actions or Digits parsers is null");
 		}
 
 		String action = actionParser.parse(data);
 		String[] digits = digitParser.parse(data);
 		
 		if(action == null || digits == null) {
-			throw new IllegalArgumentException("Actions or Digits elements is null");
+			throw new CalcAppError("Actions or Digits elements is null");
 		}
 		
 		
@@ -35,57 +36,70 @@ public class CalculatorProviderImpl implements CalculatorProvider<String, String
 			Boolean isDigit = Character.isDigit(digits[0].charAt(0));
 			
 			if (action.equals("+")) {
-				if(isDigit) {
-					result = sum(Integer.valueOf(digits[0].split(" ")[0]), Integer.valueOf(digits[1].split(" ")[0])).toString();
-				} else {
-					result = Roman2Arabic.toRoman(sum(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1])));
-				}
+				result = sum(isDigit, digits[0], digits[1]);
 			}
 			if (action.equals("-")) {
-				if(isDigit) {
-					result = diff(Integer.valueOf(digits[0].split(" ")[0]), Integer.valueOf(digits[1].split(" ")[0])).toString();
-				} else {
-					if(Roman2Arabic.toArabic(digits[0]) < Roman2Arabic.toArabic(digits[1])) {
-						result = "-" + Roman2Arabic.toRoman(Math.abs(diff(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1]))));
-					} else {
-						result = Roman2Arabic.toRoman(diff(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1])));
-					}
-				}
+				result = diff(isDigit, digits[0], digits[1]);
 			}
 			if (action.equals("/")) {
-				if(isDigit) {
-					result = dev(Integer.valueOf(digits[0].split(" ")[0]), Integer.valueOf(digits[1].split(" ")[0])).toString();
-				} else {
-					result = Roman2Arabic.toRoman(dev(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1])));
-				}
+				result = dev(isDigit, digits[0], digits[1]);
 			}
 			if (action.equals("*")) {
-				if(isDigit) {
-					result = mult(Integer.valueOf(digits[0].split(" ")[0]), Integer.valueOf(digits[1].split(" ")[0])).toString();
-				} else {
-					result = Roman2Arabic.toRoman(mult(Roman2Arabic.toArabic(digits[0]), Roman2Arabic.toArabic(digits[1])));
-				}
+				result = mult(isDigit, digits[0], digits[1]);
 			}
 		} else {
-			throw new IllegalArgumentException("Calculation possible with only two elements");
+			throw new CalcAppError("Calculation possible with only two elements");
 		}
 
 		return result;
 	}
-
-	private Integer sum(int first, int second) {
-		return first + second;
+	
+	private String sum(Boolean isDigit, String firstDigit, String secondDigit) {
+		if(isDigit) {
+			Integer result = Integer.valueOf(firstDigit) + Integer.valueOf(secondDigit);
+			return result.toString();
+		} else {
+			Integer result = DigitUtils.toArabic(firstDigit) + DigitUtils.toArabic(secondDigit);
+			return DigitUtils.toRoman(result);
+		}
 	}
 
-	private Integer dev(int first, int second) {
-		return first / second;
+	private String dev(Boolean isDigit, String firstDigit, String secondDigit) {
+		if(isDigit) {
+			if(Integer.valueOf(secondDigit) == 0) {
+				throw new CalcAppError("Divide by zero is not possible");
+			}
+			
+			Integer result = Integer.valueOf(firstDigit) / Integer.valueOf(secondDigit);
+			return result.toString();
+		} else {
+			Integer result = DigitUtils.toArabic(firstDigit) / DigitUtils.toArabic(secondDigit);
+			return DigitUtils.toRoman(result);
+		}
 	}
 
-	private Integer mult(int first, int second) {
-		return first * second;
+	private String mult(Boolean isDigit, String firstDigit, String secondDigit) {
+		if(isDigit) {
+			Integer result = Integer.valueOf(firstDigit) * Integer.valueOf(secondDigit);
+			return result.toString();
+		} else {
+			Integer result = DigitUtils.toArabic(firstDigit) * DigitUtils.toArabic(secondDigit);
+			return DigitUtils.toRoman(result);
+		}
 	}
 
-	private Integer diff(int first, int second) {
-		return first - second;
+	private String diff(Boolean isDigit, String firstDigit, String secondDigit) {
+		if(isDigit) {
+			Integer result = Integer.valueOf(firstDigit) - Integer.valueOf(secondDigit);
+			return result.toString();
+		} else {
+			Integer result = DigitUtils.toArabic(firstDigit) - DigitUtils.toArabic(secondDigit);
+			
+			if(result < 0) {
+				return "-" + DigitUtils.toRoman(Math.abs(result));
+			} else {
+				return DigitUtils.toRoman(result);
+			}
+		}
 	}
 }

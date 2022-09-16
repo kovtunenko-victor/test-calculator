@@ -2,7 +2,8 @@ package ru.test.testproj.parser;
 
 import java.util.Arrays;
 
-import ru.test.testproj.utils.Roman2Arabic;
+import ru.test.testproj.error.CalcAppError;
+import ru.test.testproj.utils.DigitUtils;
 
 public class DigitParser implements Parser<String[], String> {
 	public static final int ELEMENT_COUNT = 2;
@@ -10,11 +11,11 @@ public class DigitParser implements Parser<String[], String> {
 	@Override
 	public String[] parse(String data) {
 		if(data == null) {
-			throw new IllegalArgumentException("Input data is null. Parsing is not possible");
+			throw new CalcAppError("Input data is null. Parsing is not possible");
 		}
 		
 		if(data.split(AVAILABLE_ACTIONS_PATTERN).length != ELEMENT_COUNT) {
-			throw new IllegalArgumentException("Calculation possible with only two elements");
+			throw new CalcAppError("Calculation possible with only two elements");
 		}
 
 		return getDigits(data);
@@ -44,13 +45,13 @@ public class DigitParser implements Parser<String[], String> {
 		int digitInt;
 		
 		if(isDigit != Character.isDigit(digit.charAt(0))) {
-			throw new IllegalArgumentException("Only allowed to work with Roman or Arabic numerals");
+			throw new CalcAppError("Only allowed to work with Roman or Arabic numerals");
 		}
 		
 		if(isDigit) {
 			digitInt = Integer.valueOf(digit.split(" ")[0]);
 		} else {
-			digitInt = Roman2Arabic.toArabic(digit);
+			digitInt = DigitUtils.toArabic(digit);
 		}
 		
 		for(int d : AVAILABLE_DIGITS) {
@@ -61,7 +62,7 @@ public class DigitParser implements Parser<String[], String> {
 		}
 		
 		if(isExists  == false) {
-			throw new IllegalArgumentException(String.format("This [%s] number is prohibited", digit));
+			throw new CalcAppError(String.format("This [%s] number is prohibited", digit));
 		}
 		
 		return digit;

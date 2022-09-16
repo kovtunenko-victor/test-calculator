@@ -9,6 +9,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ru.test.testproj.error.CalcAppError;
+
 @ExtendWith(MockitoExtension.class)
 public class CalculatorProviderImplTest {
 	private CalculatorProviderImpl calculator;
@@ -165,7 +167,7 @@ public class CalculatorProviderImplTest {
 	
 	@Test
 	public void calculateShouldRizeExceptionWhenInputIsNull() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			calculator = new CalculatorProviderImpl(actionParser, digitParser);
 			calculator.calculate(null);
 		});
@@ -175,7 +177,7 @@ public class CalculatorProviderImplTest {
 	
 	@Test
 	public void calculateShouldRizeExceptionWhenAnyProviderIsNull() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			calculator = new CalculatorProviderImpl(null, null);
 			calculator.calculate("");
 		});
@@ -185,7 +187,7 @@ public class CalculatorProviderImplTest {
 	
 	@Test
 	public void calculateShouldRizeExceptionWhenAnyProviderReturnNullResult() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			calculator = new CalculatorProviderImpl(actionParser, digitParser);
 			calculator.calculate("");
 		});
@@ -195,7 +197,7 @@ public class CalculatorProviderImplTest {
 	
 	@Test
 	public void calculateShouldRizeExceptionWhenDigitProviderReturnOneDigit() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			String input = "2+3";
 			
 			when(actionParser.parse(input)).thenReturn("+");

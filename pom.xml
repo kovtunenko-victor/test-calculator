@@ -116,6 +116,7 @@
 										<exclude>ru.test.testproj.parser.DoCalculate</exclude>
 										<exclude>ru.test.testproj.utils.Roman2Arabic</exclude>
 										<exclude>ru.test.testproj.reader.ConsoleReader*</exclude>
+										<exclude>*CalcAppError*</exclude>
 										<exclude>*Test</exclude>
 									</excludes>
 									<limits>

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import ru.test.testproj.error.CalcAppError;
+
 public class DigitParserTest {
 	private final DigitParser parser = new DigitParser();
 	
@@ -26,7 +28,7 @@ public class DigitParserTest {
 	
 	@Test
 	public void parseShouldRizeExceptionWhenInputIsNull() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			parser.parse(null);
 		});
 		
@@ -35,7 +37,7 @@ public class DigitParserTest {
 	
 	@Test
 	public void parseShouldRizeExceptionWhenMoreOneDigit() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			parser.parse("1-1+1");
 		});
 
@@ -44,7 +46,7 @@ public class DigitParserTest {
 	
 	@Test
 	public void parseShouldRizeExceptionWhenInputHasRomeAndArabDigits() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			parser.parse("1-V");
 		});
 
@@ -53,7 +55,7 @@ public class DigitParserTest {
 	
 	@Test
 	public void parseShouldRizeExceptionWhenInputHasNotProhibitedDigits() {
-		Throwable exception = assertThrows(IllegalArgumentException.class, () -> {
+		Throwable exception = assertThrows(CalcAppError.class, () -> {
 			parser.parse("8-22");
 		});
 
